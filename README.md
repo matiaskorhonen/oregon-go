@@ -23,7 +23,6 @@ Read data from Oregon Scientific wireless (433MHz) sensors and push the readings
     sudo apt-get install git-core
     git clone git://git.drogon.net/wiringPi
     cd wiringPi
-    git pull origin
     ./build
     ```
   * wiringPi is released under the GNU Lesser Public License version 3.
