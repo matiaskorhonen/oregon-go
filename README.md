@@ -27,9 +27,9 @@ Read data from Oregon Scientific wireless (433MHz) sensors and push the readings
     ```
   * wiringPi is released under the GNU Lesser Public License version 3.
 
-## License & Copyright
+## License
 
-Licensed under GPLv3 due to the required dependencies.
+Licensed under GPLv3 due to the required dependencies. See the LICENSE file for details.
 
 Based on the Disk19.com/Paul Pinault [rfrpi][] project (GPLv3), [modified by Emilio Peña][OregonPi].
 
