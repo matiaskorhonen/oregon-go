@@ -7,36 +7,44 @@
 #include "RCSwitch.h"
 #include "RcOok.h"
 #include "Sensor.h"
+#include "oregonpi.h"
 
-void test() {
-  int RXPIN = 1;
-  int TXPIN = 0;
+extern "C" {
+  void * rc_switch_create(int RXPIN, int TXPIN) {
+    if(wiringPiSetup() == -1)
+      return NULL;
 
-  if(wiringPiSetup() == -1)
-    return;
+    return new RCSwitch(RXPIN,TXPIN);
+  }
 
-  RCSwitch *rc = new RCSwitch(RXPIN,TXPIN);
+  struct SensorReading rc_read_from_sensor(void *rc_switch) {
+    RCSwitch *rc = (RCSwitch *)rc_switch;
 
-  while (1)
-  {
-    if (rc->OokAvailable())
-    {
-      char message[100];
+    while (1) {
+      if (rc->OokAvailable()) {
+        char message[100];
 
-      rc->getOokCode(message);
-      printf("%s\n",message);
+        rc->getOokCode(message);
 
-      Sensor *s = Sensor::getRightSensor(message);
-      if (s!= NULL)
-      {
-        std::cout << "Name : " << s->getSensorName() << "\n";
-        printf("Temp : %f\n",s->getTemperature());
-        printf("Humidity : %f\n",s->getHumidity());
-        printf("Channel : %d\n",s->getChannel());
-        printf("\n");
+        Sensor *s = Sensor::getRightSensor(message);
+        if (s != NULL) {
+          SensorReading sr;
+          sr.temperature = s->getTemperature();
+          sr.humidity = s->getHumidity();
+          sr.name = strdup(s->getSensorName().c_str());
+          sr.sensor_type = s->getSensType();
+          sr.channel = s->getChannel();
+          sr.low_battery = s->isBatteryLow() ? 1 : 0;
+          delete s;
+          return sr;
+        }
+        delete s;
       }
-      delete s;
+      delay(500);
     }
-    delay(500);
+  }
+
+  void rc_release(void *rc_switch) {
+    delete (RCSwitch *)rc_switch;
   }
 }

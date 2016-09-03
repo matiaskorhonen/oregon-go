@@ -314,7 +314,9 @@ _sensorType=0xDCC3;
 return decode_THGR122NX(pt); break;
 
 default:
+  #ifdef SENSORDEBUG
   std::cout << "Unknown sensor id: " << std::hex << isensorId << std::endl;
+  #endif
   _sensorType=isensorId;
   _sensorName = "Unknown sensor";
   return decode_THGR122NX(pt); break;
@@ -754,7 +756,9 @@ bool OregonSensorV3::decode(char * _str) {
       _sensorName = "THGR810";
       return decode_THGR810(pt); break;
     default:
+      #ifdef SENSORDEBUG
       std::cout << "Unknown sensor id: " << std::hex << isensorId << std::endl;
+      #endif
       return false;
       break;
     }
