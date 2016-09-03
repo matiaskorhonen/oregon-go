@@ -40,7 +40,7 @@ Includes code from Suat Özgür's [RCSwitch][] project (GNU Lesser General Publi
 [Raspberry Pi 2 Model B]: https://www.raspberrypi.org/products/raspberry-pi-2-model-b/
 [Quasar DSQAM-RX3-1]: http://www.quasaruk.co.uk/acatalog/info_QAM_RX3_433.html
 [wiringPi]: http://wiringpi.com/
-[wiringPi Pins]: https://projects.drogon.net/raspberry-pi/wiringpi/pins/
+[wiringPi pins]: http://wiringpi.com/pins/
 [wiringPi instructions]: http://wiringpi.com/download-and-install/
 [rfrpi]: https://bitbucket.org/disk_91-admin/rfrpi
 [RCSwitch]: https://github.com/sui77/rc-switch
