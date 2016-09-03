@@ -1,0 +1,17 @@
+[pins]
+rx = 1
+tx = 0
+
+[[sensors]]
+type = 48323
+channel = 3
+thing_endpoint = "ecc040502376.iot.eu-west-1.amazonaws.com"
+skip_humidity = false
+skip_temperature = false
+
+[[sensors]]
+type = 52419
+channel = 2
+thing_endpoint = "bc440501476.iot.eu-west-1.amazonaws.com"
+skip_humidity = true
+skip_temperature = false
