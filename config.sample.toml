@@ -1,6 +1,5 @@
-[pins]
-rx = 1
-tx = 0
+rx_pin = 1
+tx_pin = 0
 
 [[sensors]]
 type = 48323
