@@ -12,6 +12,7 @@ import (
 	"unsafe"
 )
 
+// Sensor ...
 type Sensor struct {
 	Name       string
 	Type       int
@@ -19,12 +20,14 @@ type Sensor struct {
 	LowBattery bool
 }
 
+// SensorReading ...
 type SensorReading struct {
 	Temperature float32
 	Humidity    float32
 	Sensor
 }
 
+// SensorMonitor ...
 type SensorMonitor struct {
 	rcSwitch  unsafe.Pointer
 	active    bool
@@ -32,6 +35,7 @@ type SensorMonitor struct {
 	terminate chan chan bool
 }
 
+// NewSensorMonitor ...
 func NewSensorMonitor(RXPIN, TXPIN int) (*SensorMonitor, error) {
 	var rcSwitch unsafe.Pointer
 	rcSwitch = C.rc_switch_create(C.int(RXPIN), C.int(TXPIN))
@@ -44,6 +48,7 @@ func NewSensorMonitor(RXPIN, TXPIN int) (*SensorMonitor, error) {
 	}, nil
 }
 
+// ReadFromSensor ...
 func (sm *SensorMonitor) ReadFromSensor(ch chan<- *SensorReading) {
 	sm.mu.Lock()
 	sm.active = true
@@ -63,6 +68,7 @@ func (sm *SensorMonitor) ReadFromSensor(ch chan<- *SensorReading) {
 	}()
 }
 
+// Stop ...
 func (sm *SensorMonitor) Stop() {
 	sm.mu.Lock()
 	active := sm.active
