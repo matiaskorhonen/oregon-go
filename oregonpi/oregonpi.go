@@ -1,7 +1,7 @@
 package oregonpi
 
-// #cgo CFLAGS: -O2
-// #cgo CXXFLAGS: -O2
+// #cgo CFLAGS: -O3
+// #cgo CXXFLAGS: -O3
 // #cgo LDFLAGS: -lwiringPi
 // #include "oregonpi.h"
 // #include <stdlib.h>
