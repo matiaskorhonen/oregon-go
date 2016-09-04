@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"flag"
 	"io/ioutil"
 	"log"
@@ -15,20 +16,29 @@ import (
 	"github.com/matiaskorhonen/oregon-go/oregonpi"
 )
 
-// ConfiguredSensor is used to configure which sensors are being listened for
-type ConfiguredSensor struct {
-	SensorType      int    `toml:"type"`
-	Channel         int    `toml:"channel"`
-	ThingEndpoint   string `toml:"thing_endpoint"`
-	SkipHumidity    bool   `toml:"skip_humidity"`
-	SkipTemperature bool   `toml:"skip_temperature"`
+// SensorConfiguration is used to configure which sensors are being listened for
+type SensorConfiguration struct {
+	SensorType    int    `toml:"type"`
+	Channel       int    `toml:"channel"`
+	ThingEndpoint string `toml:"thing_endpoint"`
+	ThingRegion   string `toml:"thing_region"`
 }
 
-// Config is used to confifigure the GPIO pins and what sensors to listen for
+// Config is used to configure the GPIO pins and what sensors to listen for
 type Config struct {
-	RXPin   int                `toml:"rx_pin"`
-	TXPin   int                `toml:"tx_pin"`
-	Sensors []ConfiguredSensor `toml:"sensors"`
+	RXPin   int                   `toml:"rx_pin"`
+	TXPin   int                   `toml:"tx_pin"`
+	Sensors []SensorConfiguration `toml:"sensors"`
+}
+
+// FindSensorConfigurationForReading ...
+func (conf *Config) FindSensorConfigurationForReading(reading *oregonpi.SensorReading) (*SensorConfiguration, error) {
+	for _, sc := range conf.Sensors {
+		if sc.Channel == reading.Sensor.Channel && sc.SensorType == reading.Sensor.Type {
+			return &sc, nil
+		}
+	}
+	return nil, errors.New("Sensor not in configuration")
 }
 
 type thingState struct {
@@ -57,16 +67,19 @@ func init() {
 
 	tomlData, err := ioutil.ReadFile(configPath)
 	if err != nil {
-		log.Println(err)
-		os.Exit(1)
+		log.Fatalln(err)
 	}
 
-	var conf Config
-	_, err = toml.Decode(string(tomlData), &conf)
+	_, err = toml.Decode(string(tomlData), &config)
 	if err != nil {
-		log.Println(err)
-		os.Exit(1)
+		log.Fatalln(err)
 	}
+
+	if config.RXPin < 1 {
+		log.Fatalln("RX Pin cannot be set to 0. This is not a valid PIN on a Raspberry Pi")
+	}
+
+	log.Printf("RX pin: %v, TX pin: %v, %v sensor(s)", config.RXPin, config.TXPin, len(config.Sensors))
 }
 
 func main() {
@@ -91,19 +104,37 @@ func main() {
 	}()
 
 	for reading := range readings {
-		log.Println(reading)
-		updateThingShadow(reading)
+		log.Printf("%+v\n", reading)
+
+		sc, err := config.FindSensorConfigurationForReading(reading)
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Printf("Found sensor configuration: %+v\n", sc)
+			updateThingShadow(reading, sc)
+		}
 	}
 }
 
-func updateThingShadow(reading *oregonpi.SensorReading) {
+func updateThingShadow(reading *oregonpi.SensorReading, sc *SensorConfiguration) {
+	if sc.ThingEndpoint == "" {
+		log.Println("Thing Endpoint not configured for sensor")
+		return
+	}
+
+	if sc.ThingRegion == "" {
+		log.Println("Thing Region not configured for sensor")
+		return
+	}
+
 	sess, err := session.NewSession()
 	if err != nil {
 		log.Println("Failed to create AWS session: ", err)
 		return
 	}
 
-	svc := iotdataplane.New(sess, aws.NewConfig().WithEndpoint(os.Getenv("AWS_IOT_ENDPOINT")))
+	awsConfig := aws.NewConfig().WithEndpoint(sc.ThingEndpoint).WithRegion(sc.ThingRegion)
+	svc := iotdataplane.New(sess, awsConfig)
 
 	reportedState := thingState{
 		SensorName:       reading.Sensor.Name,
