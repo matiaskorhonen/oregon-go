@@ -18,7 +18,7 @@ import (
 
 // SensorConfiguration is used to configure which sensors are being listened for
 type SensorConfiguration struct {
-	SensorType    int    `toml:"type"`
+	Type          int    `toml:"type"`
 	Channel       int    `toml:"channel"`
 	ThingEndpoint string `toml:"thing_endpoint"`
 	ThingRegion   string `toml:"thing_region"`
@@ -34,7 +34,7 @@ type Config struct {
 // FindSensorConfigurationForReading ...
 func (conf *Config) FindSensorConfigurationForReading(reading *oregonpi.SensorReading) (*SensorConfiguration, error) {
 	for _, sc := range conf.Sensors {
-		if sc.Channel == reading.Sensor.Channel && sc.SensorType == reading.Sensor.Type {
+		if sc.Channel == reading.Sensor.Channel && sc.Type == reading.Sensor.Type {
 			return &sc, nil
 		}
 	}
