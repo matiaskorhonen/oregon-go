@@ -14,18 +14,7 @@ Read data from Oregon Scientific wireless (433MHz) sensors and push the readings
 ### Software
 
 * Tested on [Raspbian Jessie][Raspbian]
-* [wiringPi][]
-  * See the [wiringPi instructions][] for more info.
-
-    ```sh
-    sudo apt-get update
-    sudo apt-get upgrade
-    sudo apt-get install git-core
-    git clone git://git.drogon.net/wiringPi
-    cd wiringPi
-    ./build
-    ```
-  * wiringPi is released under the GNU Lesser Public License version 3.
+* [wiringPi][] is required. See the [wiringPi installation instructions][wiringPi instructions].
 
 ## License
 
