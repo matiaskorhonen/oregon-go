@@ -321,6 +321,33 @@ bool OregonSensorV2::decode(char* _str) {
         return decode_RGR918(pt);
         break;
 
+      // IDs: 0x9CC3, 0xACC3, 0xBCC3, 0xCCC3, 0xDCC3
+      // For some reason the RTGN318D sensor transmits the same values multiple
+      // times with different sensor type IDs.
+      case 0x9CC3:
+        _sensorType = 0x9CC3;
+        _sensorName = "RTGN318D";
+        return decode_THGR122NX(pt);
+        break;
+
+      case 0xACC3:
+        _sensorType = 0xACC3;
+        _sensorName = "RTGN318D";
+        return decode_THGR122NX(pt);
+        break;
+
+      case 0xBCC3:
+        _sensorType = 0xBCC3;
+        _sensorName = "RTGN318D";
+        return decode_THGR122NX(pt);
+        break;
+
+      case 0xCCC3:
+        _sensorType = 0xCCC3;
+        _sensorName = "RTGN318D";
+        return decode_THGR122NX(pt);
+        break;
+
       case 0xDCC3:
         _sensorType = 0xDCC3;
         _sensorName = "RTGN318D";
