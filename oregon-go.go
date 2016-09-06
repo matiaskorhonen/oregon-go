@@ -20,6 +20,7 @@ import (
 type SensorConfiguration struct {
 	Type          int    `toml:"type"`
 	Channel       int    `toml:"channel"`
+	ThingName     string `toml:"thing_name"`
 	ThingEndpoint string `toml:"thing_endpoint"`
 	ThingRegion   string `toml:"thing_region"`
 }
@@ -117,13 +118,8 @@ func main() {
 }
 
 func updateThingShadow(reading *oregonpi.SensorReading, sc *SensorConfiguration) {
-	if sc.ThingEndpoint == "" {
-		log.Println("Thing Endpoint not configured for sensor")
-		return
-	}
-
-	if sc.ThingRegion == "" {
-		log.Println("Thing Region not configured for sensor")
+	if sc.ThingName == "" || sc.ThingEndpoint == "" || sc.ThingRegion == "" {
+		log.Println("Missing thing_name, thing_endpoint, or thing_region configuration")
 		return
 	}
 
@@ -158,7 +154,7 @@ func updateThingShadow(reading *oregonpi.SensorReading, sc *SensorConfiguration)
 	log.Println("Updating Thing Shadow…")
 	params := &iotdataplane.UpdateThingShadowInput{
 		Payload:   payload,
-		ThingName: aws.String("OutsideWeatherSensor"),
+		ThingName: aws.String(sc.ThingName),
 	}
 	_, err = svc.UpdateThingShadow(params)
 
