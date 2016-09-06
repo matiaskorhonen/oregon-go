@@ -1,0 +1,3 @@
+# Defaults for oregon-go
+# The following setting tells oregon-go where to find the TOML config file
+OREGONGO_OPTS=-config /etc/oregon-go.toml

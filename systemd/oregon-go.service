@@ -1,0 +1,15 @@
+[Unit]
+Description=Oregon Scientific sensor monitor
+After=syslog.target network-online.target
+
+[Service]
+Type=simple
+User=root
+EnvironmentFile=/etc/default/oregon-go
+ExecStart=/usr/local/bin/oregon-go $OREGONGO_OPTS
+Restart=on-failure
+RestartSec=10
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
