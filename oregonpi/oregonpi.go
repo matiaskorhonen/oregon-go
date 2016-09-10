@@ -2,7 +2,8 @@ package oregonpi
 
 // #cgo CFLAGS: -O3
 // #cgo CXXFLAGS: -O3
-// #cgo LDFLAGS: -lwiringPi
+// #cgo CPPFLAGS: -I${SRCDIR}/wiringPi/include
+// #cgo LDFLAGS: -L${SRCDIR}/wiringPi/lib -lwiringPi
 // #include "oregonpi.h"
 // #include <stdlib.h>
 import "C"

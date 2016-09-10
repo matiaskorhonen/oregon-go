@@ -14,7 +14,8 @@ Read data from Oregon Scientific wireless (433MHz) sensors and push the readings
 ### Software
 
 * Tested on [Raspbian Jessie][Raspbian]
-* [wiringPi][] is required. See the [wiringPi installation instructions][wiringPi instructions].
+* A static build of [wiringPi][] is included in `oregonpi/wiringPi` (built on a Raspberry Pi 2 Model B)
+* This will only build for ARM architectures
 
 ## License
 
@@ -24,6 +25,7 @@ Based on the Disk19.com/Paul Pinault [rfrpi][] project (GPLv3), [modified by Emi
 
 Includes code from Suat Özgür's [RCSwitch][] project (GNU Lesser General Public License 2.1).
 
+wiringPi is released under the GNU Lesser Public License version 3.
 
 
 [Raspberry Pi 2 Model B]: https://www.raspberrypi.org/products/raspberry-pi-2-model-b/
